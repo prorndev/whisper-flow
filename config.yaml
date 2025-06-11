@@ -1,0 +1,47 @@
+# WhisperFlow Configuration
+
+# --- Application Settings ---
+app:
+  lock_file: "/tmp/whisper_flow.lock"
+
+# --- Audio Settings ---
+audio:
+  samplerate: 16000
+  temp_filename: "/tmp/recorded_audio.wav"
+
+# --- Hotkey Settings ---
+# See pynput documentation for key names: https://pynput.readthedocs.io/en/latest/keyboard.html
+# Example for Super: 'Key.cmd' or 'Key.super'
+# Example for Ctrl: 'Key.ctrl'
+# Example for Shift: 'Key.shift'
+hotkeys:
+  ru:
+    - "Key.ctrl"
+    - "Key.cmd"
+  en:
+    - "Key.shift"
+    - "Key.ctrl"
+    - "Key.cmd"
+
+# --- Performance Settings ---
+performance:
+  # "cuda" or "cpu". Automatically detects CUDA if available.
+  device: "auto"
+  # For GPU: "float16" (fastest)
+  # For CPU: "int8" (balanced)
+  compute_type: "auto"
+  # See faster-whisper docs for more models: https://github.com/guillaumekln/faster-whisper
+  model_size: "large-v3"
+  # Beam size for transcription. 1 is fastest, 5 is more accurate.
+  beam_size: 1
+
+# --- Transcription Settings ---
+transcription:
+  # Prompts to guide the model for different languages.
+  prompts:
+    ru: "Задача: транскрибируй аудио. Правила: 1. Исправляй грамматические ошибки. 2. Английские слова (IT, API) пиши на латинице. 3. Точно следуй произношению, даже для редких слов (пример: 'коньки', а не 'кони'; 'Тайбэй', а не 'тобой'). 4. Ставь знаки препинания. 5. Можно добавить эмодзи. 😊"
+    en: "Task: transcribe the audio. Rules: 1. Correct grammatical errors and stutters. 2. Use proper punctuation. 3. Transcribe technical terms and brand names accurately as spoken (e.g., 'React', 'JavaScript', 'AWS')."
+
+# --- Output Settings ---
+output:
+  paste_tool_timeout: 2 # seconds 

@@ -1,0 +1,10 @@
+pynput
+pydbus
+sounddevice
+faster-whisper
+pyperclip
+numpy
+scipy
+dbus-python 
+PyYAML
+pydantic 
