@@ -1,0 +1,13 @@
+[Unit]
+Description=WhisperFlow Voice Transcription Service
+
+[Service]
+Type=simple
+WorkingDirectory=/home/dev/Dev/wisper-flow
+ExecStartPre=/bin/rm -f /tmp/whisper_flow.lock
+ExecStart=/home/dev/Dev/wisper-flow/run.sh
+ExecStopPost=/bin/rm -f /tmp/whisper_flow.lock
+Restart=on-failure
+
+[Install]
+WantedBy=default.target 

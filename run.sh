@@ -1,5 +1,20 @@
 #!/bin/bash
 
+# Определяем DISPLAY, если не задан
+export DISPLAY=${DISPLAY:-:0}
+
+# Определяем XAUTHORITY, если не задан
+if [ -z "$XAUTHORITY" ]; then
+    if [ -f "$HOME/.Xauthority" ]; then
+        export XAUTHORITY="$HOME/.Xauthority"
+    else
+        XAUTH=$(ls /run/user/$(id -u)/*/Xauthority 2>/dev/null | head -n1)
+        if [ -n "$XAUTH" ]; then
+            export XAUTHORITY="$XAUTH"
+        fi
+    fi
+fi
+
 # Find the user's site-packages directory for Python 3
 SITE_PACKAGES=$(python3 -c "import site; print(site.getusersitepackages())")
 
