@@ -54,11 +54,16 @@ class Transcriber:
                 beam_size=settings.performance.beam_size,
                 task=task,
                 language=self._input_language if task == "transcribe" else None,
-                initial_prompt=settings.transcription.prompts.get(target_lang)
+                initial_prompt=settings.transcription.prompts.get(target_lang),
+                temperature=0,
+                condition_on_previous_text=False,
+                no_speech_threshold=0.6,
+                log_prob_threshold=-1.0
             )
             
             print(f"Model detected source as '{info.language}' with probability {info.language_probability:.4f}")
             transcribed_text = "".join(segment.text for segment in segments)
+            
             return transcribed_text.strip()
         
         finally:
