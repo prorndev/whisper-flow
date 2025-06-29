@@ -21,6 +21,8 @@ class PerformanceSettings(BaseModel):
     compute_type: str = "auto"
     model_size: str = "large-v3"
     beam_size: int = 1
+    model_reload_after_uses: int = 30
+    force_gpu_cleanup: bool = True
 
     def __init__(self, **data):
         super().__init__(**data)

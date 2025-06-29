@@ -2,6 +2,7 @@ import numpy as np
 import os
 from scipy.io.wavfile import write
 import gc
+import torch
 
 from whisper_flow.config.settings import settings
 from whisper_flow.core.event_bus import event_bus
@@ -70,6 +71,12 @@ class Transcriber:
             # Clean up the audio file and run garbage collection
             if os.path.exists(settings.audio.temp_filename):
                 os.remove(settings.audio.temp_filename)
+            
+            # Принудительная очистка GPU памяти после каждой транскрипции
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
+                torch.cuda.synchronize()
+            
             gc.collect()
             print("--- Processing Finished ---")
 

@@ -34,6 +34,9 @@ performance:
   model_size: "large-v3"
   # Beam size for transcription. 1 is fastest, 5 is more accurate.
   beam_size: 3
+  # Model reload settings to prevent quality degradation
+  model_reload_after_uses: 30  # Перезагружать модель каждые N использований
+  force_gpu_cleanup: true      # Принудительная очистка GPU памяти
 
 # --- Transcription Settings ---
 transcription:

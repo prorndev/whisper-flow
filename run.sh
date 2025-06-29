@@ -34,4 +34,9 @@ fi
 
 # Run the main application
 echo "Starting WhisperFlow..."
-python3 -m whisper_flow.main 
+
+# Create logs directory if it doesn't exist
+mkdir -p /tmp/whisper_flow_logs
+
+# Run with output to both file and systemd (unbuffered)
+python3 -u -m whisper_flow.main 2>&1 | tee /tmp/whisper_flow_logs/app.log 

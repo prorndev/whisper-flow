@@ -4,8 +4,15 @@ import atexit
 from whisper_flow.core.application import Application
 from whisper_flow.config.settings import settings
 
+# Force unbuffered output for better logging
+import functools
+print = functools.partial(print, flush=True)
+
 def main():
     """Main entry point for the application."""
+    print("🚀 WhisperFlow starting up...")
+    print(f"📋 Configuration: beam_size={settings.performance.beam_size}, model={settings.performance.model_size}")
+    
     # --- Single Instance Lock ---
     lock_file_handle = None
     try:
