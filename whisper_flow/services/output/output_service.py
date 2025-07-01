@@ -14,12 +14,14 @@ class OutputService:
         event_bus.subscribe(TranscriptionReady, self.on_transcription_ready)
 
     def on_transcription_ready(self, event: TranscriptionReady):
-        """Handles the transcribed text by copying and pasting it."""
+        """Handles the transcribed text by pasting it or copying to clipboard as fallback."""
         if not event.text:
             return
         
-        # Step 1: Always copy to clipboard first
-        copy_to_clipboard(event.text)
-
-        # Step 2: Use the selected strategy to insert the text
-        self._text_inserter.insert(event.text) 
+        # Step 1: Try to insert text into input field first
+        success = self._text_inserter.insert(event.text)
+        
+        # Step 2: If insertion failed, copy to clipboard as fallback
+        if not success:
+            print("Text insertion failed, copying to clipboard as fallback.")
+            copy_to_clipboard(event.text) 

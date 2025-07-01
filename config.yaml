@@ -42,8 +42,20 @@ performance:
 transcription:
   # Prompts to guide the model for different languages.
   prompts:
-    ru: "Транскрибируй речь точно как услышал. Исправляй грамматические ошибки, английские слова пиши латиницей, ставь знаки препинания. Не добавляй нумерацию, списки или символы в начале. Выводи только сказанные слова."
-    en: "Transcribe speech exactly as heard. Correct grammar, use proper punctuation, transcribe technical terms accurately. Do not add numbering, lists, or symbols at the beginning. Output only the spoken words."
+    ru: |
+      Транскрибируй речь дословно, сохраняя оригинальные слова и интонацию.
+      Исправь только очевидные грамматические ошибки и опечатки.
+      Английские слова и технические термины оставляй в латинице без перевода.
+      Расставь корректные знаки препинания.
+      Не добавляй нумерацию, списки, маркеры, заголовки или любые служебные символы.
+      Выводи только чистый текст без комментариев и обрамляющих фраз.
+    en: |
+      Transcribe the speech verbatim, preserving the speaker's original words and emphasis.
+      Correct only clear grammatical mistakes and typos.
+      Render all technical terms and non-English words exactly as spoken, in Latin script.
+      Insert proper punctuation.
+      Do not include numbering, bullet points, headings, or any extra symbols.
+      Output only the transcribed text, with no annotations or commentary.
 
 # --- Output Settings ---
 output:

@@ -1,24 +1,21 @@
 from abc import ABC, abstractmethod
 import subprocess
 import os
-from pynput.keyboard import Controller, Key
 
 from whisper_flow.config.settings import settings
 
 class TextInsertionStrategy(ABC):
     """Abstract base class for text insertion strategies."""
     @abstractmethod
-    def insert(self, text: str):
+    def insert(self, text: str) -> bool:
         pass
 
 class X11TextInserter(TextInsertionStrategy):
-    """Uses xdotool to paste text in X11."""
-    def __init__(self):
-        self._keyboard = Controller()
-
-    def insert(self, text: str):
+    """Uses xdotool to type text directly in X11."""
+    
+    def insert(self, text: str) -> bool:
         try:
-            # Find the active window
+            # Find the active window first
             window_id_proc = subprocess.run(
                 ["xdotool", "getactivewindow"],
                 capture_output=True, text=True, check=True,
@@ -27,37 +24,48 @@ class X11TextInserter(TextInsertionStrategy):
             window_id = window_id_proc.stdout.strip()
 
             if window_id:
-                print(f"Found active window {window_id}. Simulating paste (Ctrl+V).")
-                self._keyboard.press(Key.ctrl)
-                self._keyboard.press('v')
-                self._keyboard.release('v')
-                self._keyboard.release(Key.ctrl)
-                print("Paste command sent.")
+                print(f"Found active window {window_id}. Typing text directly.")
+                # Type text directly using xdotool
+                subprocess.run(
+                    ["xdotool", "type", text],
+                    check=True,
+                    timeout=settings.output.paste_tool_timeout
+                )
+                print("Text typed successfully.")
+                return True
             else:
-                print("No active window found to paste into. Text remains in clipboard.")
+                print("No active window found to type into.")
+                return False
         except FileNotFoundError:
-            print("Paste command failed: 'xdotool' not found.")
+            print("Text insertion failed: 'xdotool' not found.")
+            return False
         except subprocess.TimeoutExpired:
-            print("Pasting timed out (window may be unresponsive).")
+            print("Text insertion timed out (xdotool may be unresponsive).")
+            return False
         except Exception as e:
-            print(f"An error occurred during X11 pasting: {e}")
+            print(f"An error occurred during X11 text insertion: {e}")
+            return False
 
 class WaylandTextInserter(TextInsertionStrategy):
     """Uses ydotool to type text in Wayland."""
-    def insert(self, text: str):
+    def insert(self, text: str) -> bool:
         try:
             subprocess.run(
                 ["ydotool", "type", text],
                 check=True,
                 timeout=settings.output.paste_tool_timeout
             )
-            print("Pasted text using ydotool.")
+            print("Text typed using ydotool.")
+            return True
         except FileNotFoundError:
-            print("Paste command failed: 'ydotool' not found.")
+            print("Text insertion failed: 'ydotool' not found.")
+            return False
         except subprocess.TimeoutExpired:
-            print("Pasting timed out (ydotool may be unresponsive).")
+            print("Text insertion timed out (ydotool may be unresponsive).")
+            return False
         except Exception as e:
-            print(f"An error occurred during Wayland pasting: {e}")
+            print(f"An error occurred during Wayland text insertion: {e}")
+            return False
 
 def get_text_inserter() -> TextInsertionStrategy:
     """Factory function to get the appropriate text inserter for the environment."""
